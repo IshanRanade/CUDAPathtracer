@@ -2,9 +2,9 @@
 
 #include <vector>
 #include <iostream>
+#include <cuda.h>
 #include "scene/camera.cuh"
 #include "scene/scene.cuh"
-
 
 PathTracer::PathTracer(int width, int height) :
     imageWidth(width), imageHeight(height) {

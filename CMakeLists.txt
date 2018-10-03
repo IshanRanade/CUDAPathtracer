@@ -8,15 +8,24 @@ set(CUDA_NVCC_FLAGS
     ${CUDA_NVCC_FLAGS}; 
     -dc arch=sm_60)
 
+list(APPEND CUDA_NVCC_FLAGS_DEBUG -G -g)
+set(CUDA_ATTACH_VS_BUILD_RULE_TO_CUDA_FILE ON)
+set(CUDA_SEPARABLE_COMPILATION ON)  
+
 include_directories(include)
 
+find_package(OpenGL)
+
 set(CPP_SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/app.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/app.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/ui/ui.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/ui/ui.cpp
 )
 
 set(CUDA_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cu
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/pathtracing/pathtracer.cuh
     ${CMAKE_CURRENT_SOURCE_DIR}/src/pathtracing/pathtracer.cu
     ${CMAKE_CURRENT_SOURCE_DIR}/src/pathtracing/raytracing/ray.cu
     ${CMAKE_CURRENT_SOURCE_DIR}/src/pathtracing/raytracing/intersection.cu
@@ -31,14 +40,5 @@ add_executable(pathtracer
     ${CUDA_SOURCES}
     ${CPP_SOURCES}
 )
-
-#[[
-get_property(core_options TARGET Qt5::Core PROPERTY INTERFACE_COMPILE_OPTIONS)
-string(REPLACE "-fPIC" "" new_core_options ${core_options})
-set_property(TARGET Qt5::Core PROPERTY INTERFACE_COMPILE_OPTIONS ${new_core_options})
-set_property(TARGET Qt5::Core PROPERTY INTERFACE_POSITION_INDEPENDENT_CODE "ON")
-
-set_source_files_properties(${CUDA_SOURCES} PROPERTIES COMPILE_FLAGS " -Xcompiler=-fPIC")
-set_source_files_properties(${CPP_SOURCES} PROPERTIES COMPILE_FLAGS " -fPIC")]]
 
 target_link_libraries(pathtracer Qt5::Widgets)

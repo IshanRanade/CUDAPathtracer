@@ -1,6 +1,7 @@
 #include "app.h"
 
 #include "pathtracing/pathtracer.cuh"
+#include <glm/exponential.hpp>
 
 
 AppDialog::AppDialog(QApplication *parentApp) :
@@ -42,8 +43,8 @@ App::App(int argc, char **argv) {
     gui->show();
     
 
-    // TEMP
+    // TEMPss
     // Render the scene immediately and display it
-    renderAndDisplayScene();
+    //renderAndDisplayScene();
 
 }

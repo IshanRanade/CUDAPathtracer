@@ -12,6 +12,7 @@ public:
     PathTracer(int width, int height);
     std::vector<float> getFrameBuffer();
 
+
 private:
     int imageWidth;
     int imageHeight;

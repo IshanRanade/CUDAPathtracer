@@ -2,9 +2,10 @@
 
 #include <vector>
 #include <iostream>
-#include <cuda.h>
+#include <thrust/random.h>
 #include "scene/camera.cuh"
 #include "scene/scene.cuh"
+
 
 PathTracer::PathTracer(int width, int height) :
     imageWidth(width), imageHeight(height) {
@@ -40,6 +41,8 @@ std::vector<float> PathTracer::getFrameBuffer() {
     test<<<numBlocks,blockSize>>>(numPixels, x, camera);
 
     cudaDeviceSynchronize();
+
+	
 
     std::vector<float> result = std::vector<float>(x, x + dataSize);
 

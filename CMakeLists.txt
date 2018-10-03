@@ -13,10 +13,12 @@ set(CUDA_ATTACH_VS_BUILD_RULE_TO_CUDA_FILE ON)
 set(CUDA_SEPARABLE_COMPILATION ON)  
 
 include_directories(include)
+include_directories(src)
 
 find_package(OpenGL)
 
 set(CPP_SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/globals.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/app.h
     ${CMAKE_CURRENT_SOURCE_DIR}/src/app.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/ui/ui.h
@@ -27,12 +29,19 @@ set(CUDA_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cu
     ${CMAKE_CURRENT_SOURCE_DIR}/src/pathtracing/pathtracer.cuh
     ${CMAKE_CURRENT_SOURCE_DIR}/src/pathtracing/pathtracer.cu
+	${CMAKE_CURRENT_SOURCE_DIR}/src/pathtracing/raytracing/ray.cuh
     ${CMAKE_CURRENT_SOURCE_DIR}/src/pathtracing/raytracing/ray.cu
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/pathtracing/raytracing/intersection.cuh
     ${CMAKE_CURRENT_SOURCE_DIR}/src/pathtracing/raytracing/intersection.cu
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/pathtracing/scene/camera.cu   
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/pathtracing/scene/camera.cuh
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/pathtracing/scene/camera.cu
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/pathtracing/scene/scene.cuh
     ${CMAKE_CURRENT_SOURCE_DIR}/src/pathtracing/scene/scene.cu
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/pathtracing/scene/transform.cuh
     ${CMAKE_CURRENT_SOURCE_DIR}/src/pathtracing/scene/transform.cu
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/pathtracing/scene/geometry/shape.cuh
     ${CMAKE_CURRENT_SOURCE_DIR}/src/pathtracing/scene/geometry/shape.cu
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/pathtracing/scene/geometry/sphere.cuh
     ${CMAKE_CURRENT_SOURCE_DIR}/src/pathtracing/scene/geometry/sphere.cu
 )
 

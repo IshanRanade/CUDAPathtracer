@@ -1,6 +1,7 @@
 #pragma once
 
 #include "geometry/shape.cuh"
+#include <vector>
 
 
 class Scene {

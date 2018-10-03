@@ -1,6 +1,11 @@
 #pragma once
 
-#include "la.h"
+#include <cuda.h>
+#include <cuda_runtime.h>
+#include <cstdio>
+#include <device_launch_parameters.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 typedef float Float;
 typedef glm::vec3 Color3f;

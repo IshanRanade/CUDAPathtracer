@@ -29,7 +29,7 @@ int App::startApp() {
 
 void App::renderAndDisplayScene() {
     std::vector<float> frameBufferData = pathtracer->getFrameBuffer();
-    gui->updateDisplay(frameBufferData);
+    //gui->updateDisplay(frameBufferData);
 }
 
 App::App(int argc, char **argv) {
@@ -42,9 +42,8 @@ App::App(int argc, char **argv) {
 
     gui->show();
     
-
     // TEMPss
     // Render the scene immediately and display it
-    //renderAndDisplayScene();
+    renderAndDisplayScene();
 
 }

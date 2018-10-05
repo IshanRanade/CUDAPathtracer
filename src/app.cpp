@@ -27,23 +27,27 @@ int App::startApp() {
     return app->exec();
 }
 
-void App::renderAndDisplayScene() {
-    std::vector<float> frameBufferData = pathtracer->getFrameBuffer();
-    //gui->updateDisplay(frameBufferData);
-}
-
 App::App(int argc, char **argv) {
+	imageWidth = 1280;
+	imageHeight = 720;
+
     app = new QApplication(argc, argv);
-    gui = new GUI();
-    pathtracer = new PathTracer(gui->imageWidth, gui->imageHeight);
+    gui = new GUI(imageWidth, imageHeight, pbo);
+    pathtracer = new PathTracer(imageWidth,	imageHeight);
     
     AppDialog *dialog = new AppDialog(app);
     app->installEventFilter(dialog);
 
     gui->show();
+
     
     // TEMPss
     // Render the scene immediately and display it
-    renderAndDisplayScene();
+    runCuda();
 
+}
+
+void App::runCuda() {
+	std::vector<float> frameBufferData = pathtracer->getFrameBuffer();
+	//gui->updateDisplay(frameBufferData);
 }

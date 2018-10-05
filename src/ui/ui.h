@@ -5,14 +5,16 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QPushButton>
-#include <QImage>
 #include <QGraphicsView>
-#include <QLabel>
+#include <QOpenGLWindow>
+#include <QOpenGLWidget>
+#include <QOpenGLFunctions_2_0>
+#include <QOpenGLBuffer>
 
 
 /*
-    This class is the button that Renders the framebuffer.
-*/
+ * This class is the button that Renders the framebuffer.
+ */
 class RenderButtonWidget : public QWidget {
 public:
     RenderButtonWidget(QWidget *parent);
@@ -22,46 +24,46 @@ private:
     QVBoxLayout *layout;
 };
 
-
 /*
-    This class encapsulates the image area that displays the path traced frame buffer.
-*/
-class RenderDisplayWidget : public QWidget {
+ * The OpenGL QWidget that holds the buffer to display the rendered image.
+ */
+class DisplayImageWidget : public QOpenGLWidget, protected QOpenGLFunctions_2_0 {
 public:
-    RenderDisplayWidget(QWidget *parent, int width, int height);
+	DisplayImageWidget(int imageWidth, int imageHeight, GLuint pbo);
 
-    void setDisplaySize(int width, int height);
-    void updateDisplay(std::vector<float> rgbData);
+	void initializeGL();
+	void paintGL();
 
-private:
-    int width;
-    int height;
-    QVBoxLayout *layout;
-    QImage *image;
-    QLabel *label;
+	int imageWidth;
+	int imageHeight;
+
+	GLuint pbo;
+	GLuint displayTexture;
 };
 
-
 /*
-    This class encapsulates the entire GUI, using q QMainWindow.  It holds all the buttons
-    and inputs that affect the path tracer and also an image area that displays the path traced
-    final framebuffer.
-*/
+ * This class encapsulates the entire GUI, using QMainWindow.  It holds all the buttons
+ * and inputs that affect the path tracer and also an image area that displays the path traced
+ * final framebuffer.
+ */
 class GUI : public QMainWindow {
 public:
-    GUI();
+    GUI(int imageWidth, int imageHeight, GLuint pbo);
 
     void show();
-    void updateDisplay(std::vector<float> rgbData);
 
     int imageWidth;
     int imageHeight;
+
+	GLuint pbo;
 
 private:
     QWidget *mainWidget;
     QHBoxLayout *layout;
     RenderButtonWidget *renderButtonWidget;
-    RenderDisplayWidget *renderDisplayWidget;
+	DisplayImageWidget *displayImage;
 
     void initLayout();
 };
+
+

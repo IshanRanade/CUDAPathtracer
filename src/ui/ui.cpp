@@ -20,55 +20,57 @@ RenderButtonWidget::RenderButtonWidget(QWidget *parent) :
 
 /*
 */
-RenderDisplayWidget::RenderDisplayWidget(QWidget *parent, int width, int height) :
-    QWidget(parent), width(width), height(height) {
+DisplayImageWidget::DisplayImageWidget(int imageWidth, int imageHeight, GLuint pbo) :
+	imageWidth(imageWidth), imageHeight(imageHeight), pbo(pbo) {
+}
+void DisplayImageWidget::initializeGL() {
+	initializeOpenGLFunctions();
 
-    layout = new QVBoxLayout();
-    image = new QImage(width, height, QImage::Format_RGB32);
+	glGenTextures(1, &displayTexture);
+	glBindTexture(GL_TEXTURE_2D, displayTexture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, imageWidth, imageHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 
-    for(int i = 0; i < width; ++i) {
-        for(int j = 0; j < height; ++j) {
-            image->setPixel(i, j, 4);
-        }
-    }
+	int num_texels = imageWidth * imageHeight;
+	int num_values = num_texels * 4;
+	int size_tex_data = sizeof(float) * num_values;
 
-    label = new QLabel();
-    label->setPixmap(QPixmap::fromImage(*image));
-    layout->addWidget(label);
-    setLayout(layout);
+	glGenBuffers(1, &pbo);
+	glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
+	glBufferData(GL_PIXEL_UNPACK_BUFFER, size_tex_data, NULL, GL_DYNAMIC_COPY);
+
 }
 
-void RenderDisplayWidget::setDisplaySize(int width, int height) {
-    this->width = width;
-    this->height = height;
-}
+void DisplayImageWidget::paintGL() {
+	glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
+	int *ptr = (int*) glMapBuffer(GL_PIXEL_UNPACK_BUFFER, GL_READ_WRITE);
 
-void RenderDisplayWidget::updateDisplay(std::vector<float> rgbData) {
-    int row = -1;
-    int col = 0;
+	for (int i = 0; i < imageWidth * imageHeight; i += 4) {
+		ptr[i] = 0;
+		ptr[i + 1] = 1;
+		ptr[i + 2] = 0;
+		ptr[i + 3] = 0;
+	}
 
-    int i = 0;
 
-    while(i < rgbData.size()) {
-        if(i % width == 0) {
-            row += 1;
-            col = 0;
-        }
+	glBindTexture(GL_TEXTURE_2D, displayTexture);
+	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, imageWidth, imageHeight, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 
-        QColor color(rgbData[i],rgbData[i+1],rgbData[i+2]);
-        image->setPixel(col, row, color.rgba());
-        col++;
+	glBegin(GL_QUADS);
+		glTexCoord2f(0, 0); glVertex3f(-1, -1, 0);
+		glTexCoord2f(0, 1); glVertex3f(-1, 1, 0);
+		glTexCoord2f(1, 1); glVertex3f(1, 1, 0);
+		glTexCoord2f(1, 0); glVertex3f(1, -1, 0);
+	glEnd();
 
-        i += 3;
-    }
-
-    label->setPixmap(QPixmap::fromImage(*image));    
+	glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
 }
 
 /*
 */
-GUI::GUI() :
-    QMainWindow(), imageWidth(1280), imageHeight(720) {
+GUI::GUI(int imageWidth, int imageHeight, GLuint pbo) :
+    QMainWindow(), imageWidth(imageWidth), imageHeight(imageHeight), pbo(pbo) {
 
     initLayout();
 }
@@ -83,17 +85,14 @@ void GUI::initLayout() {
 
     layout = new QHBoxLayout(this);
 
-    // Add the various widgets
+    // Add the render button
     renderButtonWidget = new RenderButtonWidget(this);
     layout->addWidget(renderButtonWidget);
 
-    renderDisplayWidget = new RenderDisplayWidget(this, imageWidth, imageHeight);
-    layout->addWidget(renderDisplayWidget);
+	// Add the OpenGL display window
+	displayImage = new DisplayImageWidget(imageWidth, imageHeight, pbo);
+	displayImage->setFixedSize(imageWidth, imageHeight);
+	layout->addWidget(displayImage);
 
     mainWidget->setLayout(layout);
-}
-
-void GUI::updateDisplay(std::vector<float> rgbData) {
-    renderDisplayWidget->updateDisplay(rgbData);
-    update();
 }

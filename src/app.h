@@ -6,7 +6,7 @@
 #include <QWidget>
 #include <QDialog>
 #include <QKeyEvent>
-#include "ui/ui.h"
+#include <ui.h>
 
 
 class PathTracer;
@@ -33,9 +33,14 @@ public:
     PathTracer *pathtracer;
     QApplication *app;
 
+	GLuint pbo;
+
+	int imageWidth;
+	int imageHeight;
+
     App(int argc, char **argv);
 
     int startApp();
 
-    void renderAndDisplayScene();
+    void runCuda();
 };

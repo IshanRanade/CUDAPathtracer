@@ -74,5 +74,5 @@ add_executable(pathtracer
     ${CUDA_SOURCES}
     ${CPP_SOURCES}
 )
-
+ 
 target_link_libraries(pathtracer Qt5::Widgets)

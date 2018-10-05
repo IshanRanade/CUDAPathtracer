@@ -26,36 +26,37 @@ DisplayImageWidget::DisplayImageWidget(int imageWidth, int imageHeight, GLuint p
 void DisplayImageWidget::initializeGL() {
 	initializeOpenGLFunctions();
 
-	glGenTextures(1, &displayTexture);
-	glBindTexture(GL_TEXTURE_2D, displayTexture);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, imageWidth, imageHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-
 	int num_texels = imageWidth * imageHeight;
 	int num_values = num_texels * 4;
-	int size_tex_data = sizeof(float) * num_values;
+	int size_tex_data = sizeof(GLubyte) * num_values;
 
 	glGenBuffers(1, &pbo);
 	glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
 	glBufferData(GL_PIXEL_UNPACK_BUFFER, size_tex_data, NULL, GL_DYNAMIC_COPY);
 
+	glEnable(GL_TEXTURE_2D);
+	glGenTextures(1, &displayTexture);
+	glBindTexture(GL_TEXTURE_2D, displayTexture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, imageWidth, imageHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
 
 void DisplayImageWidget::paintGL() {
-	glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
-	int *ptr = (int*) glMapBuffer(GL_PIXEL_UNPACK_BUFFER, GL_READ_WRITE);
+	
+	uchar* ptr = (uchar*) glMapBuffer(GL_PIXEL_UNPACK_BUFFER, GL_READ_WRITE);
 
-	for (int i = 0; i < imageWidth * imageHeight; i += 4) {
+	for (size_t i = 0; i < imageWidth * imageHeight * 4; i += 4) {
 		ptr[i] = 0;
-		ptr[i + 1] = 1;
-		ptr[i + 2] = 0;
-		ptr[i + 3] = 0;
+		ptr[i + 1] = 100;
+		ptr[i + 2] = 100;
+		ptr[i + 3] = 100;
 	}
+	glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
 
-
+	glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
 	glBindTexture(GL_TEXTURE_2D, displayTexture);
-	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, imageWidth, imageHeight, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, imageWidth, imageHeight, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 
 	glBegin(GL_QUADS);
 		glTexCoord2f(0, 0); glVertex3f(-1, -1, 0);
@@ -63,8 +64,6 @@ void DisplayImageWidget::paintGL() {
 		glTexCoord2f(1, 1); glVertex3f(1, 1, 0);
 		glTexCoord2f(1, 0); glVertex3f(1, -1, 0);
 	glEnd();
-
-	glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
 }
 
 /*

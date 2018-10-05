@@ -41,9 +41,11 @@ App::App(int argc, char **argv) {
     gui->show();
 
     
-    // TEMPss
-    // Render the scene immediately and display it
-    runCuda();
+    // Pathtrace based on current frame
+	while (true) {
+		runCuda();
+		gui->displayImage->paintGL();
+	}
 
 }
 

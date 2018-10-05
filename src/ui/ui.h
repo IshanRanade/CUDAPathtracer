@@ -57,7 +57,6 @@ public:
 
 	GLuint pbo;
 
-private:
     QWidget *mainWidget;
     QHBoxLayout *layout;
     RenderButtonWidget *renderButtonWidget;
@@ -65,5 +64,3 @@ private:
 
     void initLayout();
 };
-
-

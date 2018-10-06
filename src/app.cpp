@@ -2,7 +2,7 @@
 
 #include "pathtracing/pathtracer.cuh"
 #include <glm/exponential.hpp>
-
+#include <cuda_gl_interop.h>
 
 AppDialog::AppDialog(QApplication *parentApp) :
     app(parentApp) {
@@ -32,7 +32,7 @@ App::App(int argc, char **argv) {
 	imageHeight = 720;
 
     app = new QApplication(argc, argv);
-    gui = new GUI(imageWidth, imageHeight, pbo);
+    gui = new GUI(imageWidth, imageHeight);
     pathtracer = new PathTracer(imageWidth,	imageHeight);
     
     AppDialog *dialog = new AppDialog(app);
@@ -42,14 +42,27 @@ App::App(int argc, char **argv) {
 
     
     // Pathtrace based on current frame
-	while (true) {
-		runCuda();
+	//while (true) {
+	//QProcess *process = new QProcess((QObject*)this);
+		void *pbo_dptr = NULL;
+
+		cudaGraphicsResource_t resource = 0;
+		cudaGraphicsGLRegisterBuffer(&resource, gui->displayImage->pbo, cudaGraphicsRegisterFlagsNone);
+		cudaGraphicsMapResources(1, &resource, NULL);
+		size_t size;
+		cudaGraphicsResourceGetMappedPointer(&pbo_dptr, &size, resource);
+
+		pathtracer->pathtrace(pbo_dptr, 0);
+
+		cudaGraphicsUnmapResources(1, &resource, NULL);
+		cudaGraphicsUnregisterResource(resource);
+
 		gui->displayImage->paintGL();
-	}
+	//}
 
 }
 
 void App::runCuda() {
-	std::vector<float> frameBufferData = pathtracer->getFrameBuffer();
+	//std::vector<float> frameBufferData = pathtracer->getFrameBuffer();
 	//gui->updateDisplay(frameBufferData);
 }

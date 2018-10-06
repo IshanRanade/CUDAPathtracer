@@ -29,7 +29,7 @@ private:
  */
 class DisplayImageWidget : public QOpenGLWidget, protected QOpenGLFunctions_2_0 {
 public:
-	DisplayImageWidget(int imageWidth, int imageHeight, GLuint pbo);
+	DisplayImageWidget(int imageWidth, int imageHeight);
 
 	void initializeGL();
 	void paintGL();
@@ -48,14 +48,12 @@ public:
  */
 class GUI : public QMainWindow {
 public:
-    GUI(int imageWidth, int imageHeight, GLuint pbo);
+    GUI(int imageWidth, int imageHeight);
 
     void show();
 
     int imageWidth;
     int imageHeight;
-
-	GLuint pbo;
 
     QWidget *mainWidget;
     QHBoxLayout *layout;

@@ -41,15 +41,34 @@ __global__ void doNothingKernel() {
 
 }
 
-std::vector<float> PathTracer::getFrameBuffer() {
+__global__ void fillPBO(int n, uchar4 *pbo) {
+	int index = blockIdx.x * blockDim.x + threadIdx.x;
+
+	if (index < n) {
+		pbo[index].w = 255;
+		pbo[index].x = 0;
+		pbo[index].y = 255;
+		pbo[index].z = 255;
+	}
+}
+
+void PathTracer::pathtrace(void *pbo, float frame) {
+	int blockSize = 256;
+	int numBlocks = (imageWidth * imageHeight + blockSize - 1) / blockSize;
+
+	fillPBO<<<numBlocks,blockSize>>>(imageWidth * imageHeight, (uchar4*)pbo);
+
+	return;
+
+
 	//doNothingKernel << <1, 1 >> > ();
 	//return std::vector<float>();
 
-	Camera * testCamera = new Camera();
-	cudaMallocManaged(&testCamera, sizeof(Camera));
-	testCameraKernel << <1, 1 >> > (testCamera);
-	return std::vector<float>();
-
+	//Camera * testCamera = new Camera();
+	//cudaMallocManaged(&testCamera, sizeof(Camera));
+	//testCameraKernel << <1, 1 >> > (testCamera);
+	//return std::vector<float>();
+	//return;
 
 	//testCamera->x = 5;
 

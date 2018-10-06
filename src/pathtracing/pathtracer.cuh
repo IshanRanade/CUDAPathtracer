@@ -10,8 +10,7 @@
 class PathTracer {
 public:
     PathTracer(int width, int height);
-    std::vector<float> getFrameBuffer();
-
+	void pathtrace(void *pbo, float frame);
 
 private:
     int imageWidth;

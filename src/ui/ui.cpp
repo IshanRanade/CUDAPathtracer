@@ -20,9 +20,10 @@ RenderButtonWidget::RenderButtonWidget(QWidget *parent) :
 
 /*
 */
-DisplayImageWidget::DisplayImageWidget(int imageWidth, int imageHeight, GLuint pbo) :
-	imageWidth(imageWidth), imageHeight(imageHeight), pbo(pbo) {
+DisplayImageWidget::DisplayImageWidget(int imageWidth, int imageHeight) :
+	imageWidth(imageWidth), imageHeight(imageHeight) {
 }
+
 void DisplayImageWidget::initializeGL() {
 	initializeOpenGLFunctions();
 
@@ -43,17 +44,6 @@ void DisplayImageWidget::initializeGL() {
 }
 
 void DisplayImageWidget::paintGL() {
-	
-	uchar* ptr = (uchar*) glMapBuffer(GL_PIXEL_UNPACK_BUFFER, GL_READ_WRITE);
-
-	for (size_t i = 0; i < imageWidth * imageHeight * 4; i += 4) {
-		ptr[i] = 0;
-		ptr[i + 1] = 100;
-		ptr[i + 2] = 100;
-		ptr[i + 3] = 100;
-	}
-	glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
-
 	glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
 	glBindTexture(GL_TEXTURE_2D, displayTexture);
 	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, imageWidth, imageHeight, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
@@ -68,8 +58,8 @@ void DisplayImageWidget::paintGL() {
 
 /*
 */
-GUI::GUI(int imageWidth, int imageHeight, GLuint pbo) :
-    QMainWindow(), imageWidth(imageWidth), imageHeight(imageHeight), pbo(pbo) {
+GUI::GUI(int imageWidth, int imageHeight) :
+    QMainWindow(), imageWidth(imageWidth), imageHeight(imageHeight) {
 
     initLayout();
 }
@@ -89,7 +79,7 @@ void GUI::initLayout() {
     layout->addWidget(renderButtonWidget);
 
 	// Add the OpenGL display window
-	displayImage = new DisplayImageWidget(imageWidth, imageHeight, pbo);
+	displayImage = new DisplayImageWidget(imageWidth, imageHeight);
 	displayImage->setFixedSize(imageWidth, imageHeight);
 	layout->addWidget(displayImage);
 

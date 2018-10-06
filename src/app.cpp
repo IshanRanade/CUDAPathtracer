@@ -3,6 +3,7 @@
 #include "pathtracing/pathtracer.cuh"
 #include <glm/exponential.hpp>
 #include <cuda_gl_interop.h>
+#include <QtConcurrent/qtconcurrentrun.h>
 
 AppDialog::AppDialog(QApplication *parentApp) :
     app(parentApp) {
@@ -27,6 +28,12 @@ int App::startApp() {
     return app->exec();
 }
 
+void runCuda(App* app) {
+	while (true) {
+		app->runCuda();
+	}
+}
+
 App::App(int argc, char **argv) {
 	imageWidth = 1280;
 	imageHeight = 720;
@@ -44,6 +51,17 @@ App::App(int argc, char **argv) {
     // Pathtrace based on current frame
 	//while (true) {
 	//QProcess *process = new QProcess((QObject*)this);
+		
+	//}
+	QFuture<void> future = QtConcurrent::run(this, &App::runCuda);
+}
+
+
+
+void App::runCuda() {
+	//while (true) {
+		std::cout << "here" << std::endl;
+		//continue;
 		void *pbo_dptr = NULL;
 
 		cudaGraphicsResource_t resource = 0;
@@ -58,11 +76,8 @@ App::App(int argc, char **argv) {
 		cudaGraphicsUnregisterResource(resource);
 
 		gui->displayImage->paintGL();
+		gui->update();
 	//}
-
-}
-
-void App::runCuda() {
 	//std::vector<float> frameBufferData = pathtracer->getFrameBuffer();
 	//gui->updateDisplay(frameBufferData);
 }

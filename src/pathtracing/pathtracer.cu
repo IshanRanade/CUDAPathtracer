@@ -41,22 +41,24 @@ __global__ void doNothingKernel() {
 
 }
 
-__global__ void fillPBO(int n, uchar4 *pbo) {
+__global__ void fillPBO(int n, uchar4 *pbo, float frame) {
 	int index = blockIdx.x * blockDim.x + threadIdx.x;
 
 	if (index < n) {
-		pbo[index].w = 255;
+		pbo[index].w = 0;
 		pbo[index].x = 0;
-		pbo[index].y = 255;
-		pbo[index].z = 255;
+		pbo[index].y = 0;
+		pbo[index].z = (int)frame;
 	}
 }
 
 void PathTracer::pathtrace(void *pbo, float frame) {
+	//std::cout << frame << std::endl;
 	int blockSize = 256;
 	int numBlocks = (imageWidth * imageHeight + blockSize - 1) / blockSize;
 
-	fillPBO<<<numBlocks,blockSize>>>(imageWidth * imageHeight, (uchar4*)pbo);
+	fillPBO<<<numBlocks,blockSize>>>(imageWidth * imageHeight, (uchar4*)pbo, frame);
+	cudaDeviceSynchronize();
 
 	return;
 

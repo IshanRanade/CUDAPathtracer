@@ -12,17 +12,18 @@
 
 class PathTracer;
 
-/*
- * This class attaches to a QApplication and listens to keyboard inputs.
- */
-class AppDialog : public QObject {
+class RenderThread : public QThread {
 public:
-    QApplication *app;
+	RenderThread(QObject *parent) :
+		QThread(parent) {
+	};
 
-    AppDialog(QApplication *parentApp);
-
-    bool eventFilter(QObject* obj, QEvent* event);
+	void run() override {
+		std::cout << "here" << std::endl;
+	}
 };
+
+
 
 /*
  * This class is the main app and implements an MVC.
@@ -32,14 +33,37 @@ class App {
 public:
     GUI *gui;
     PathTracer *pathtracer;
-    QApplication *app;
+    QApplication *qApplication;
+
+	QThread *renderThread;
 
 	int imageWidth;
 	int imageHeight;
+
+	bool render;
+	float frame;
 
     App(int argc, char **argv);
 
     int startApp();
 
     void runCuda();
+	void nothing() {
+
+	}
+};
+
+/*
+ * This class attaches to a QApplication and listens to keyboard inputs.
+ */
+class AppDialog : public QObject {
+public:
+	QApplication *qApplication;
+	App *app;
+
+	int x;
+
+	AppDialog(QApplication *parentApp, App *app);
+
+	bool eventFilter(QObject* obj, QEvent* event);
 };

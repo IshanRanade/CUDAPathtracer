@@ -5,6 +5,7 @@
 #include <QColor>
 #include <QPoint>
 #include <iostream>
+#include <app.h>
 
 
 /*
@@ -20,8 +21,9 @@ RenderButtonWidget::RenderButtonWidget(QWidget *parent) :
 
 /*
 */
-DisplayImageWidget::DisplayImageWidget(int imageWidth, int imageHeight) :
-	imageWidth(imageWidth), imageHeight(imageHeight) {
+DisplayImageWidget::DisplayImageWidget(int imageWidth, int imageHeight, GUI *gui) :
+	imageWidth(imageWidth), imageHeight(imageHeight), gui(gui) {
+	setFocusPolicy(Qt::StrongFocus);
 }
 
 void DisplayImageWidget::initializeGL() {
@@ -44,6 +46,7 @@ void DisplayImageWidget::initializeGL() {
 }
 
 void DisplayImageWidget::paintGL() {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
 	glBindTexture(GL_TEXTURE_2D, displayTexture);
 	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, imageWidth, imageHeight, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
@@ -58,10 +61,10 @@ void DisplayImageWidget::paintGL() {
 
 /*
 */
-GUI::GUI(int imageWidth, int imageHeight) :
-    QMainWindow(), imageWidth(imageWidth), imageHeight(imageHeight) {
+GUI::GUI(int imageWidth, int imageHeight, App *app) :
+    QMainWindow(), imageWidth(imageWidth), imageHeight(imageHeight), app(app) {
 
-    initLayout();
+    //initLayout();
 }
 
 void GUI::show() {
@@ -79,9 +82,15 @@ void GUI::initLayout() {
     layout->addWidget(renderButtonWidget);
 
 	// Add the OpenGL display window
-	displayImage = new DisplayImageWidget(imageWidth, imageHeight);
+	displayImage = new DisplayImageWidget(imageWidth, imageHeight, this);
 	displayImage->setFixedSize(imageWidth, imageHeight);
+
+	
+
 	layout->addWidget(displayImage);
+
+//	displayImage->doneCurrent();
+//	displayImage->context()->moveToThread(app->renderThread);
 
     mainWidget->setLayout(layout);
 }

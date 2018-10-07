@@ -11,6 +11,8 @@
 #include <QOpenGLFunctions_2_0>
 #include <QOpenGLBuffer>
 
+class GUI;
+class App;
 
 /*
  * This class is the button that Renders the framebuffer.
@@ -29,7 +31,9 @@ private:
  */
 class DisplayImageWidget : public QOpenGLWidget, protected QOpenGLFunctions_2_0 {
 public:
-	DisplayImageWidget(int imageWidth, int imageHeight);
+	DisplayImageWidget(int imageWidth, int imageHeight, GUI *gui);
+
+	GUI *gui;
 
 	void initializeGL();
 	void paintGL();
@@ -48,7 +52,9 @@ public:
  */
 class GUI : public QMainWindow {
 public:
-    GUI(int imageWidth, int imageHeight);
+    GUI(int imageWidth, int imageHeight, App* app);
+
+	App *app;
 
     void show();
 

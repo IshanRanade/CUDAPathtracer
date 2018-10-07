@@ -52,23 +52,14 @@ set(CUDA_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/pathtracing/pathtracer.cu
 
 	# src/pathtracing/raytracing
-	${CMAKE_CURRENT_SOURCE_DIR}/src/pathtracing/raytracing/ray.cuh
     ${CMAKE_CURRENT_SOURCE_DIR}/src/pathtracing/raytracing/ray.cu
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/pathtracing/raytracing/intersection.cuh
     ${CMAKE_CURRENT_SOURCE_DIR}/src/pathtracing/raytracing/intersection.cu
 
 	# src/pathtracing/scene
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/pathtracing/scene/camera.cuh
     ${CMAKE_CURRENT_SOURCE_DIR}/src/pathtracing/scene/camera.cu
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/pathtracing/scene/scene.cuh
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/pathtracing/scene/scene.cu
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/pathtracing/scene/transform.cuh
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/pathtracing/scene/transform.cu
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/pathtracing/scene/sceneStructs.h
 
 	# src/pathtracing/scene/geometry
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/pathtracing/scene/geometry/shape.cuh
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/pathtracing/scene/geometry/shape.cu
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/pathtracing/scene/geometry/sphere.cuh
     ${CMAKE_CURRENT_SOURCE_DIR}/src/pathtracing/scene/geometry/sphere.cu
 )
 

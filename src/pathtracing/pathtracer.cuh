@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <sceneStructs.h>
 
 /*
     This encapsulates all the logic for path tracing.  It exposes a primary public function, getFrameBuffer(),

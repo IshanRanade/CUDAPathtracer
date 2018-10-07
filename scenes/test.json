@@ -1,7 +1,20 @@
 {
     "Camera" : {
-        "ResolutionX": 1280,
-        "ResolutionY": 720,
-        
+        "Width": 1280,
+        "Height": 720,
+        "FOVY": 45,
+        "Depth": 8,
+        "Eye": [0.0, 5.0, 10.5],
+        "LookAt": [0.0, 5.0, 0.0],
+        "Up": [0.0, 1.0, 0.0]
+    },
+    "Lights" : {
+
+    },
+    "Materials" : {
+
+    },
+    "Shapes" : {
+
     }
 }

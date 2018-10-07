@@ -81,6 +81,7 @@ void App::loadScene(std::string file) {
 	gui->displayImageWidget->update();
 	gui->update();
 
+	delete pathtracer;
 	pathtracer = new PathTracer(imageWidth, imageHeight);
 	render = true;
 

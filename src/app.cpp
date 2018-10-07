@@ -2,6 +2,8 @@
 
 #include "pathtracing/pathtracer.cuh"
 #include <cuda_gl_interop.h>
+#include <sceneloader.h>
+#include <iostream>
 
 
 AppDialog::AppDialog(QApplication *parentApp, App *app) :
@@ -33,7 +35,7 @@ int App::startApp() {
 }
 
 App::App(int argc, char **argv) :
-	render(true), imageWidth(1280), imageHeight(720), frame(0) {
+	render(false), imageWidth(1280), imageHeight(720), frame(0) {
 
     qApplication = new QApplication(argc, argv);
     gui = new GUI(imageWidth, imageHeight, this);
@@ -43,6 +45,8 @@ App::App(int argc, char **argv) :
     
     AppDialog *dialog = new AppDialog(qApplication, this);
     qApplication->installEventFilter(dialog);
+
+	loadScene("../scenes/test.json");
 }
 
 void App::runCuda() {
@@ -60,4 +64,25 @@ void App::runCuda() {
 	cudaGraphicsUnregisterResource(resource);
 
 	frame++;
+}
+
+void App::loadScene(std::string file) {
+	imageWidth = 1280;
+	imageHeight = 720;
+	frame = 0;
+
+	gui->imageWidth = imageWidth;
+	gui->imageHeight = imageHeight;
+	gui->displayImageWidget->imageWidth = imageWidth;
+	gui->displayImageWidget->imageHeight = imageHeight;
+	gui->displayImageWidget->setFixedSize(imageWidth, imageHeight);
+	gui->displayImageWidget->deleteBuffers();
+	gui->displayImageWidget->initializeBuffers();
+	gui->displayImageWidget->update();
+	gui->update();
+
+	pathtracer = new PathTracer(imageWidth, imageHeight);
+	render = true;
+
+	gui->show();
 }

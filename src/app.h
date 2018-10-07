@@ -5,6 +5,7 @@
 #include <QDialog>
 #include <QKeyEvent>
 #include <ui.h>
+#include <string>
 
 
 class PathTracer;
@@ -30,6 +31,7 @@ public:
     int startApp();
 
     void runCuda();
+	void loadScene(std::string file);
 };
 
 /*

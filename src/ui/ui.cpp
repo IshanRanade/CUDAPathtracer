@@ -22,14 +22,17 @@ DisplayImageWidget::DisplayImageWidget(int imageWidth, int imageHeight) :
 
 void DisplayImageWidget::initializeGL() {
 	initializeOpenGLFunctions();
+	initializeBuffers();
+}
 
+void::DisplayImageWidget::initializeBuffers() {
 	int num_texels = imageWidth * imageHeight;
 	int num_values = num_texels * 4;
-	int size_tex_data = sizeof(GLubyte) * num_values;
+	int sizeTextureData = sizeof(GLubyte) * num_values;
 
 	glGenBuffers(1, &pbo);
 	glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo);
-	glBufferData(GL_PIXEL_UNPACK_BUFFER, size_tex_data, NULL, GL_DYNAMIC_COPY);
+	glBufferData(GL_PIXEL_UNPACK_BUFFER, sizeTextureData, NULL, GL_DYNAMIC_COPY);
 
 	glEnable(GL_TEXTURE_2D);
 	glGenTextures(1, &displayTexture);
@@ -51,6 +54,11 @@ void DisplayImageWidget::paintGL() {
 		glTexCoord2f(1, 1); glVertex3f(1, 1, 0);
 		glTexCoord2f(1, 0); glVertex3f(1, -1, 0);
 	glEnd();
+}
+
+void DisplayImageWidget::deleteBuffers() {
+	glDeleteBuffers(1, &pbo);
+	glDeleteTextures(1, &displayTexture);
 }
 
 /*

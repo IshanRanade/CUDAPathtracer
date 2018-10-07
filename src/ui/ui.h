@@ -33,6 +33,8 @@ public:
 	DisplayImageWidget(int imageWidth, int imageHeight);
 
 	void initializeGL();
+	void initializeBuffers();
+	void deleteBuffers();
 	void paintGL();
 
 	int imageWidth;

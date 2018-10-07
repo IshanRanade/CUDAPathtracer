@@ -1,5 +1,7 @@
-cmake_minimum_required(VERSION 3.10.3)
+cmake_minimum_required(VERSION 3.12)
 project(pathtracer CXX CUDA)
+
+set (CMAKE_CXX_STANDARD 11)
 
 set (CMAKE_PREFIX_PATH "C:/Qt/5.11.2/msvc2017_64")
 find_package(Qt5 COMPONENTS Widgets REQUIRED)

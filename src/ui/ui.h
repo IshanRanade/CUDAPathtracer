@@ -5,11 +5,10 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QPushButton>
-#include <QGraphicsView>
-#include <QOpenGLWindow>
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions_2_0>
 #include <QOpenGLBuffer>
+
 
 class GUI;
 class App;
@@ -31,9 +30,7 @@ private:
  */
 class DisplayImageWidget : public QOpenGLWidget, protected QOpenGLFunctions_2_0 {
 public:
-	DisplayImageWidget(int imageWidth, int imageHeight, GUI *gui);
-
-	GUI *gui;
+	DisplayImageWidget(int imageWidth, int imageHeight);
 
 	void initializeGL();
 	void paintGL();
@@ -64,7 +61,5 @@ public:
     QWidget *mainWidget;
     QHBoxLayout *layout;
     RenderButtonWidget *renderButtonWidget;
-	DisplayImageWidget *displayImage;
-
-    void initLayout();
+	DisplayImageWidget *displayImageWidget;
 };

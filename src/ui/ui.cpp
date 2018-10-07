@@ -1,10 +1,5 @@
 #include "ui.h"
 
-#include <QSize>
-#include <QPixmap>
-#include <QColor>
-#include <QPoint>
-#include <iostream>
 #include <app.h>
 
 
@@ -21,9 +16,8 @@ RenderButtonWidget::RenderButtonWidget(QWidget *parent) :
 
 /*
 */
-DisplayImageWidget::DisplayImageWidget(int imageWidth, int imageHeight, GUI *gui) :
-	imageWidth(imageWidth), imageHeight(imageHeight), gui(gui) {
-	setFocusPolicy(Qt::StrongFocus);
+DisplayImageWidget::DisplayImageWidget(int imageWidth, int imageHeight) :
+	imageWidth(imageWidth), imageHeight(imageHeight) {
 }
 
 void DisplayImageWidget::initializeGL() {
@@ -64,33 +58,24 @@ void DisplayImageWidget::paintGL() {
 GUI::GUI(int imageWidth, int imageHeight, App *app) :
     QMainWindow(), imageWidth(imageWidth), imageHeight(imageHeight), app(app) {
 
-    //initLayout();
+	mainWidget = new QWidget();
+	mainWidget->setWindowTitle("Path Tracer");
+
+	layout = new QHBoxLayout(this);
+
+	// Add the render button
+	renderButtonWidget = new RenderButtonWidget(this);
+	layout->addWidget(renderButtonWidget);
+
+	// Add the OpenGL display window
+	displayImageWidget = new DisplayImageWidget(imageWidth, imageHeight);
+	displayImageWidget->setFixedSize(imageWidth, imageHeight);
+
+	layout->addWidget(displayImageWidget);
+
+	mainWidget->setLayout(layout);
 }
 
 void GUI::show() {
     mainWidget->show();
-}
-
-void GUI::initLayout() {
-    mainWidget = new QWidget();
-    mainWidget->setWindowTitle("Path Tracer");
-
-    layout = new QHBoxLayout(this);
-
-    // Add the render button
-    renderButtonWidget = new RenderButtonWidget(this);
-    layout->addWidget(renderButtonWidget);
-
-	// Add the OpenGL display window
-	displayImage = new DisplayImageWidget(imageWidth, imageHeight, this);
-	displayImage->setFixedSize(imageWidth, imageHeight);
-
-	
-
-	layout->addWidget(displayImage);
-
-//	displayImage->doneCurrent();
-//	displayImage->context()->moveToThread(app->renderThread);
-
-    mainWidget->setLayout(layout);
 }

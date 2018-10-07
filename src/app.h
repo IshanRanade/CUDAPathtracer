@@ -1,29 +1,13 @@
 #pragma once
 
 #include <globals.h>
-#include <iostream>
-#include <QtWidgets>
 #include <QApplication>
-#include <QWidget>
 #include <QDialog>
 #include <QKeyEvent>
 #include <ui.h>
 
 
 class PathTracer;
-
-class RenderThread : public QThread {
-public:
-	RenderThread(QObject *parent) :
-		QThread(parent) {
-	};
-
-	void run() override {
-		std::cout << "here" << std::endl;
-	}
-};
-
-
 
 /*
  * This class is the main app and implements an MVC.
@@ -34,8 +18,6 @@ public:
     GUI *gui;
     PathTracer *pathtracer;
     QApplication *qApplication;
-
-	QThread *renderThread;
 
 	int imageWidth;
 	int imageHeight;
@@ -48,9 +30,6 @@ public:
     int startApp();
 
     void runCuda();
-	void nothing() {
-
-	}
 };
 
 /*
@@ -60,8 +39,6 @@ class AppDialog : public QObject {
 public:
 	QApplication *qApplication;
 	App *app;
-
-	int x;
 
 	AppDialog(QApplication *parentApp, App *app);
 
